@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Swarm Cursors — 光标正在建造这一页</title>
+<title>Swarm Cursors — Cursors are building this page</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.6 1.9 3.6 20.1 8.9 15.2 11.9 22.2 14.6 21 11.7 14.2 18.9 13.9Z' fill='%23E0402A'/%3E%3C/svg%3E">
 <style>
   :root{
@@ -35,7 +35,7 @@
   a{color:inherit;text-decoration:none}
   button{font-family:var(--sans);cursor:pointer}
 
-  /* ---------- 被快照的那一页 ---------- */
+  /* ---------- The page being captured ---------- */
   #site{position:relative;max-width:1240px;margin:0 auto;background:var(--canvas);background-image:radial-gradient(rgba(16,16,20,.055) 1px, transparent 1px);background-size:22px 22px;background-attachment:fixed;padding:0 48px}
   .topline{height:4px;background:var(--accent);margin:0 -48px}
 
@@ -104,7 +104,7 @@
     .credit .right{text-align:left}
     .nav-links{display:none}
   }
-  /* ---------- file:// 提示 ---------- */
+  /* ---------- file:// hint ---------- */
   #boot-hint{
     position:fixed;left:50%;top:16px;transform:translateX(-50%);
     max-width:760px;padding:14px 18px;background:#fff;
@@ -118,7 +118,7 @@
 </head>
 <body>
 
-<!-- ================= 被快照 / 被重建的页面 ================= -->
+<!-- ================= The page to snapshot and rebuild ================= -->
 <div id="site">
   <div class="topline"></div>
 
@@ -128,22 +128,22 @@
       <span class="brand-name">swarm-cursors</span>
     </div>
     <nav class="nav-links">
-      <a href="#principle">原理</a>
-      <a href="#usage">用法</a>
-      <a href="../src/swarm-cursors.js" target="_blank" rel="noopener">源码</a>
-      <a href="#credit">致谢</a>
+      <a href="#principle">How it works</a>
+      <a href="#usage">Usage</a>
+      <a href="../src/swarm-cursors.js" target="_blank" rel="noopener">Source</a>
+      <a href="#credit">Credits</a>
     </nav>
-    <button class="nav-btn" data-build>重建这一页</button>
+    <button class="nav-btn" data-build>Rebuild this page</button>
   </header>
   <div class="nav-rule"></div>
 
   <section class="hero">
-    <h1>光标<br>正在建造<br>这一页<em>。</em></h1>
+    <h1>Cursors<br>are building<br>this page<em>.</em></h1>
     <div class="hero-side">
-      <p class="lede">把任意页面快照成一份蓝图，再让一群并发光标把它重新搭起来：拖出盒子、逐字输入、钢笔连线、⌥ 拖拽复制。你看到的是重建，不是回放。</p>
+      <p class="lede">Snapshot any page into a blueprint, then let a swarm of concurrent cursors build it again: draw boxes, type letter by letter, trace lines, and ⌥-drag copies. What you see is a reconstruction, not a replay.</p>
       <div class="cta">
-        <button class="btn-primary" data-build>重建这一页</button>
-        <a class="link-arrow" href="../src/swarm-cursors.js" target="_blank" rel="noopener">读库源码 ↗</a>
+        <button class="btn-primary" data-build>Rebuild this page</button>
+        <a class="link-arrow" href="../src/swarm-cursors.js" target="_blank" rel="noopener">Read the source ↗</a>
       </div>
       <div class="palette">
         <span class="sw" style="background:#0D99FF"></span>
@@ -153,7 +153,7 @@
         <span class="sw" style="background:#FFA629"></span>
         <span class="sw" style="background:#0FB5BA"></span>
         <span class="sw" style="background:#8A4BE0"></span>
-        <span class="palette-label">八位协作者 · 各自的颜色</span>
+        <span class="palette-label">Eight collaborators · each with a color</span>
       </div>
     </div>
   </section>
@@ -216,61 +216,61 @@
         <rect x="70" y="92" width="284" height="12" fill="none" stroke="#0D99FF" stroke-width="1" stroke-dasharray="4 4" opacity="0.7"/>
       </svg>
     </div>
-    <div class="stage-caption">蓝图把页面拆成五类任务：盒子、文字、线条、媒体、重复项。每个任务都带自己的边长与坐标。</div>
+    <div class="stage-caption">The blueprint breaks the page into five kinds of tasks: boxes, text, lines, media, and repeats. Each task carries its own dimensions and coordinates.</div>
   </section>
 
   <section id="principle">
     <div class="section-head">
-      <div class="section-num">02 / 三步</div>
+      <div class="section-num">02 / THREE STEPS</div>
       <div>
-        <h2 class="section-title">快照、重建、归位</h2>
-        <p class="section-sub">页面先进冰箱，再被一群协作者一件件搬回来。中间没有任何一段是录像回放。</p>
+        <h2 class="section-title">Snapshot, rebuild, restore</h2>
+        <p class="section-sub">The page is put on ice, then a group of collaborators brings it back piece by piece. None of it is a video replay.</p>
       </div>
     </div>
     <div class="cards">
       <article class="card">
         <div class="card-strip" style="background:#E0402A"></div>
         <div class="card-tag" style="color:#E0402A">SNAPSHOT</div>
-        <h3>把页面拆成任务</h3>
-        <p>遍历 DOM 与计算样式：有底色、描边、圆角、阴影的成为盒子；有文字的成为文本层，连同字族、字重、行高、颜色一起取走；单边描线与水平线变成钢笔线；图片、图形、画布变成媒体。</p>
+        <h3>Break the page into tasks</h3>
+        <p>Traverse the DOM and computed styles: backgrounds, borders, rounded corners, and shadows become boxes; text becomes text layers, along with font family, weight, line height, and color; single-sided borders and horizontal rules become pen lines; images, graphics, and canvases become media.</p>
       </article>
       <article class="card">
         <div class="card-strip" style="background:#0D99FF"></div>
         <div class="card-tag" style="color:#0D99FF">REBUILD</div>
-        <h3>按行解锁，逐个交付</h3>
-        <p>任务按纵向分行，一行建完才放下一行。光标领到任务先飞过去，按下、拖出 W × H 的框、再填色或揭图，文字逐字敲出来，复制项等母版先落位。</p>
+        <h3>Unlock rows, deliver one by one</h3>
+        <p>Tasks are grouped into vertical rows, each unlocked only after the previous row is built. A cursor flies to its task, presses, drags out a W × H box, then fills it or reveals an image. Text is typed letter by letter, and copies wait for their master to be placed.</p>
       </article>
       <article class="card">
         <div class="card-strip" style="background:#1C9A55"></div>
         <div class="card-tag" style="color:#1C9A55">FLOCK</div>
-        <h3>让它们像一群人</h3>
-        <p>分离、趋近、避让鼠标三股力叠加，靠得太近会互相让位；空闲时光标在待建区上方游走，交付完成后一起从画面上沿飞走，像一场收工。</p>
+        <h3>Make them move like a team</h3>
+        <p>Separation, attraction, and mouse avoidance combine so cursors make room when they get too close. When idle, they wander above the area awaiting construction; once the work is done, they fly off together through the top of the screen.</p>
       </article>
     </div>
   </section>
 
   <section id="usage">
     <div class="section-head">
-      <div class="section-num">03 / 用法</div>
+      <div class="section-num">03 / USAGE</div>
       <div>
-        <h2 class="section-title">三个 API 就够</h2>
-        <p class="section-sub">库只有一份文件，没有依赖，也不改动你的源页面结构：内容靠 visibility 隐藏，还原时逐项恢复。</p>
+        <h2 class="section-title">Just three APIs</h2>
+        <p class="section-sub">The library is a single file with no dependencies and does not change your source page's structure: content is hidden with visibility and restored item by item.</p>
       </div>
     </div>
     <div class="usage">
       <ul class="used">
-        <li><span>target</span><span>要快照的元素，字符串选择器或节点</span></li>
-        <li><span>cursors</span><span>并发光标数，默认 8</span></li>
-        <li><span>speed</span><span>重建倍速，1 / 2 / 3</span></li>
-        <li><span>sound</span><span>Web Audio 合成的点击与打字声</span></li>
-        <li><span>startOnLoad</span><span>true 时建好就自动开演</span></li>
-        <li><span>showControlPanel</span><span>true 时显示右下角控制面板</span></li>
-        <li><span>restoreDelay</span><span>还原延迟，单位毫秒</span></li>
-        <li><span>restoreOnFinish</span><span>true 时建完自动还原真实页面</span></li>
-        <li><span>restoreDelay</span><span>还原延迟，单位毫秒</span></li>
+        <li><span>target</span><span>Element to snapshot, as a selector string or node</span></li>
+        <li><span>cursors</span><span>Number of concurrent cursors, default 8</span></li>
+        <li><span>speed</span><span>Reconstruction speed multiplier, 1 / 2 / 3</span></li>
+        <li><span>sound</span><span>Web Audio synthesized clicks and typing sounds</span></li>
+        <li><span>startOnLoad</span><span>Automatically start when created if true</span></li>
+        <li><span>showControlPanel</span><span>Show the bottom-right control panel if true</span></li>
+        <li><span>restoreDelay</span><span>Restoration delay in milliseconds</span></li>
+        <li><span>restoreOnFinish</span><span>Automatically restore the real page after building if true</span></li>
+        <li><span>restoreDelay</span><span>Restoration delay in milliseconds</span></li>
       </ul>
       <div class="code">
-<pre><span style="color:#8A8F97">// 零依赖，直接 import</span>
+<pre><span style="color:#8A8F97">// Zero dependencies, import directly</span>
 <span style="color:#E0402A">import</span> { SwarmCursors } <span style="color:#E0402A">from</span> <span style="color:#1C9A55">'./swarm-cursors.js'</span>
 
 <span style="color:#E0402A">const</span> swarm = <span style="color:#E0402A">new</span> SwarmCursors({
@@ -279,28 +279,28 @@
   restoreOnFinish: <span style="color:#0D99FF">true</span>,
 })
 
-<span style="color:#E0402A">await</span> swarm.play()    <span style="color:#8A8F97">// 快照 → 擦空 → 重建 → 自动还原</span>
-swarm.replay()       <span style="color:#8A8F97">// 再来一遍</span>
-swarm.stop()         <span style="color:#8A8F97">// 手动还原</span></pre>
+<span style="color:#E0402A">await</span> swarm.play()    <span style="color:#8A8F97">// Snapshot → clear → rebuild → auto-restore</span>
+swarm.replay()       <span style="color:#8A8F97">// Do it again</span>
+swarm.stop()         <span style="color:#8A8F97">// Restore manually</span></pre>
       </div>
     </div>
   </section>
 
   <footer class="credit" id="credit">
     <div>SWARM CURSORS<br>v0.1 · MIT</div>
-    <div>灵感与动效语言致意 Joel Califa 的 Swarm，<br>以及 DhvanilPatel 的 swarm-cursors 扩展。</div>
-    <div class="right">本页即样本：<br>它刚刚被自己的光标重建过一次。</div>
+    <div>Inspired by the visual language of Joel Califa's Swarm,<br>and DhvanilPatel's swarm-cursors extension.</div>
+    <div class="right">This page is the sample:<br>it has just been rebuilt by its own cursors.</div>
   </footer>
 </div>
 
 <div id="boot-hint" hidden>
-  直接双击打开（file://）时，浏览器会拦截 ES 模块导入。请在项目根目录跑
-  <code>python3 -m http.server 8080</code>，再访问
-  <code>http://localhost:8080/demo/index.html</code>。
+  When opened directly (file://), browsers block ES module imports. Run
+  <code>python3 -m http.server 8080</code> from the project root, then visit
+  <code>http://localhost:8080/demo/index.html</code>.
 </div>
 
 <script type="module">
-  // 直接引用库源码，不做任何合并打包
+  // Import the library source directly, without bundling
   let SwarmCursors;
   try {
     ({ SwarmCursors } = await import('../src/swarm-cursors.js'));
@@ -323,13 +323,13 @@ swarm.stop()         <span style="color:#8A8F97">// 手动还原</span></pre>
     cursors: 8,
     speed,
     background: '#FBF7F0',
-    startOnLoad: autoStart,          // 建好就自动开演
-    showControlPanel: showPanel,     // 右下角控制面板
-    restoreOnFinish: autoRestore,    // 建完自动还原真实页面
+    startOnLoad: autoStart,          // Start automatically when created
+    showControlPanel: showPanel,     // Bottom-right control panel
+    restoreOnFinish: autoRestore,    // Restore the real page after building
     restoreDelay: 1100,
   });
 
-  // 页面里的「重建这一页」按钮在快照范围内，建完会自己变回可点
+  // The page's rebuild buttons are inside the snapshot and become clickable again when restored
   document.querySelectorAll('[data-build]').forEach((el) => {
     el.addEventListener('click', () => {
       if (swarm.state === 'playing' || swarm.state === 'done') swarm.stop();
@@ -337,7 +337,7 @@ swarm.stop()         <span style="color:#8A8F97">// 手动还原</span></pre>
     });
   });
 
-  // 截图 / 录屏辅助：?auto&advance=8000 直接快进，?restore 立即还原
+  // Screenshot / recording helper: ?auto&advance=8000 fast-forwards; ?restore restores immediately
   swarm.on('start', () => {
     if (advance) swarm.advance(advance);
     if (params.has('restore')) swarm.stop();
