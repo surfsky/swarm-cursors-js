@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swarm Cursors — 光标正在建造这一页</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.6 1.9 3.6 20.1 8.9 15.2 11.9 22.2 14.6 21 11.7 14.2 18.9 13.9Z' fill='%23E0402A'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --canvas:#FBF7F0;
+    --paper:#FFFFFF;
+    --ink:#101014;
+    --mid:#5B574F;
+    --line:#E8E2D5;
+    --accent:#E0402A;
+    --accent-soft:#FBEDE9;
+    --blue:#0D99FF;
+    --blue-soft:#EAF5FF;
+    --green:#1C9A55;
+    --serif:"Songti SC","STSong","Noto Serif CJK SC",Georgia,serif;
+    --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--canvas);
+    background-image:radial-gradient(rgba(16,16,20,.055) 1px, transparent 1px);
+    background-size:22px 22px;
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font-family:var(--sans);cursor:pointer}
+
+  /* ---------- 被快照的那一页 ---------- */
+  #site{position:relative;max-width:1240px;margin:0 auto;background:var(--canvas);background-image:radial-gradient(rgba(16,16,20,.055) 1px, transparent 1px);background-size:22px 22px;background-attachment:fixed;padding:0 48px}
+  .topline{height:4px;background:var(--accent);margin:0 -48px}
+
+  .nav{display:flex;align-items:center;gap:30px;height:72px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand-mark{width:28px;height:28px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+  .brand-name{font-family:var(--mono);font-size:13px;letter-spacing:.01em;color:var(--ink)}
+  .nav-links{display:flex;gap:26px;margin-left:auto;font-size:13px;color:var(--mid)}
+  .nav-links a{border-bottom:1px solid transparent;padding-bottom:2px}
+  .nav-links a:hover{color:var(--accent);border-color:var(--accent)}
+  .nav-btn{height:36px;padding:0 18px;border:1px solid var(--ink);background:transparent;font-size:13px;color:var(--ink);letter-spacing:.02em}
+  .nav-btn:hover{background:var(--ink);color:#fff}
+  .nav-rule{height:1px;background:var(--line)}
+
+  .hero{display:grid;grid-template-columns:1.18fr .95fr;gap:54px;padding:72px 0 54px;align-items:end}
+  .hero h1{font-family:var(--serif);font-weight:700;font-size:86px;line-height:1.03;margin:0;letter-spacing:-.01em;color:var(--ink)}
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .hero-side{padding-bottom:6px}
+  .lede{font-size:16px;line-height:1.9;color:var(--mid);margin:0 0 30px;max-width:36em}
+  .cta{display:flex;align-items:center;gap:20px}
+  .btn-primary{height:46px;padding:0 24px;border:1px solid var(--ink);background:var(--ink);color:#fff;font-size:14px;letter-spacing:.02em}
+  .btn-primary:hover{background:var(--accent);border-color:var(--accent)}
+  .link-arrow{font-size:14px;color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:3px}
+  .link-arrow:hover{color:var(--accent);border-color:var(--accent)}
+  .palette{display:flex;align-items:center;gap:8px;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+  .sw{width:26px;height:26px;border:1px solid rgba(16,16,20,.12)}
+  .palette-label{font-family:var(--mono);font-size:11px;color:var(--mid);letter-spacing:.03em;margin-left:6px}
+
+  .stage{border:1px solid var(--line);background:var(--paper);margin-bottom:66px}
+  .stage-head{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);background:var(--accent-soft);font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.06em}
+  .stage-head .live{color:var(--green)}
+  .stage-caption{padding:14px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--mid)}
+
+  .section-head{display:grid;grid-template-columns:118px 1fr;gap:30px;align-items:start;padding:0 0 26px}
+  .section-num{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.08em;padding-top:9px}
+  .section-title{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.24;margin:0}
+  .section-sub{margin:14px 0 0;font-size:15px;line-height:1.85;color:var(--mid);max-width:44em}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--line);background:var(--paper);margin-bottom:74px}
+  .card{padding:0 24px 30px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .card-strip{height:4px;margin:0 0 22px -24px;width:calc(100% + 48px)}
+  .card-tag{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+  .card h3{font-family:var(--serif);font-size:23px;font-weight:700;margin:16px 0 12px;line-height:1.3}
+  .card p{font-size:13.5px;line-height:1.85;color:var(--mid);margin:0}
+
+  .usage{display:grid;grid-template-columns:1fr 1.45fr;gap:40px;align-items:start;margin-bottom:72px}
+  .code{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--paper);padding:22px 24px;overflow:hidden}
+  .code pre{margin:0;font-family:var(--mono);font-size:13px;line-height:1.85;white-space:pre-wrap;color:var(--ink)}
+  .used{list-style:none;margin:0;padding:0;font-size:13.5px;color:var(--mid);line-height:1.6}
+  .used li{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .used li span:first-child{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:112px;letter-spacing:.02em}
+
+  .credit{border-top:2px solid var(--accent);margin-top:8px;padding:26px 0 54px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;font-family:var(--mono);font-size:11px;color:var(--mid);line-height:1.9}
+  .credit .right{text-align:right;color:var(--ink)}
+
+  @media (max-width:900px){
+    #site{padding:0 22px}
+    .topline{margin:0 -22px}
+    .hero{grid-template-columns:1fr;gap:24px;padding:40px 0 36px}
+    .hero h1{font-size:50px}
+    .section-head{grid-template-columns:1fr;gap:6px}
+    .cards{grid-template-columns:1fr}
+    .card-strip{margin-left:-22px;width:calc(100% + 44px)}
+    .usage{grid-template-columns:1fr}
+    .credit{grid-template-columns:1fr}
+    .credit .right{text-align:left}
+    .nav-links{display:none}
+  }
+  /* ---------- file:// 提示 ---------- */
+  #boot-hint{
+    position:fixed;left:50%;top:16px;transform:translateX(-50%);
+    max-width:760px;padding:14px 18px;background:#fff;
+    border:1px solid var(--line);border-top:3px solid var(--accent);
+    box-shadow:0 10px 30px rgba(16,16,20,.12);
+    font:13px/1.7 var(--sans);color:var(--mid);z-index:2147483001;
+  }
+  #boot-hint code{font-family:var(--mono);color:var(--ink);background:var(--accent-soft);padding:1px 5px}
+
+</style>
+</head>
+<body>
+
+<!-- ================= 被快照 / 被重建的页面 ================= -->
+<div id="site">
+  <div class="topline"></div>
+
+  <header class="nav">
+    <div class="brand">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M3.6 1.9 3.6 20.1 8.9 15.2 11.9 22.2 14.6 21 11.7 14.2 18.9 13.9Z" fill="#FFFFFF"/></svg></span>
+      <span class="brand-name">swarm-cursors</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#principle">原理</a>
+      <a href="#usage">用法</a>
+      <a href="../src/swarm-cursors.js" target="_blank" rel="noopener">源码</a>
+      <a href="#credit">致谢</a>
+    </nav>
+    <button class="nav-btn" data-build>重建这一页</button>
+  </header>
+  <div class="nav-rule"></div>
+
+  <section class="hero">
+    <h1>光标<br>正在建造<br>这一页<em>。</em></h1>
+    <div class="hero-side">
+      <p class="lede">把任意页面快照成一份蓝图，再让一群并发光标把它重新搭起来：拖出盒子、逐字输入、钢笔连线、⌥ 拖拽复制。你看到的是重建，不是回放。</p>
+      <div class="cta">
+        <button class="btn-primary" data-build>重建这一页</button>
+        <a class="link-arrow" href="../src/swarm-cursors.js" target="_blank" rel="noopener">读库源码 ↗</a>
+      </div>
+      <div class="palette">
+        <span class="sw" style="background:#0D99FF"></span>
+        <span class="sw" style="background:#E0402A"></span>
+        <span class="sw" style="background:#1C9A55"></span>
+        <span class="sw" style="background:#7A5CFF"></span>
+        <span class="sw" style="background:#FFA629"></span>
+        <span class="sw" style="background:#0FB5BA"></span>
+        <span class="sw" style="background:#8A4BE0"></span>
+        <span class="palette-label">八位协作者 · 各自的颜色</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage">
+    <div class="stage-head">
+      <span>BLUEPRINT / 01</span>
+      <span class="live">● LIVE CANVAS</span>
+    </div>
+    <div class="stage-body">
+      <svg viewBox="0 0 1240 524" width="100%" style="display:block">
+        <rect x="0" y="0" width="1240" height="524" fill="#FFFFFF"/>
+        <rect x="0" y="0" width="1240" height="4" fill="#E0402A"/>
+
+        <rect x="40" y="26" width="26" height="26" fill="none" stroke="#101014" stroke-width="1"/>
+        <rect x="80" y="36" width="104" height="10" fill="#C6C9CE"/>
+        <rect x="1010" y="34" width="60" height="10" fill="#C6C9CE"/>
+        <rect x="1090" y="34" width="60" height="10" fill="#C6C9CE"/>
+        <line x1="40" y1="76" x2="1200" y2="76" stroke="#E4E3DD" stroke-width="1"/>
+
+        <rect x="40" y="126" width="360" height="42" fill="#B4B7BE"/>
+        <rect x="40" y="180" width="300" height="42" fill="#B4B7BE"/>
+        <rect x="40" y="234" width="398" height="42" fill="#B4B7BE"/>
+
+        <rect x="770" y="140" width="420" height="9" fill="#D5D8DD"/>
+        <rect x="770" y="160" width="392" height="9" fill="#D5D8DD"/>
+        <rect x="770" y="180" width="352" height="9" fill="#D5D8DD"/>
+
+        <rect x="770" y="228" width="118" height="34" fill="#101014"/>
+        <rect x="912" y="228" width="96" height="34" fill="#FBEDE9"/>
+
+        <rect x="40" y="330" width="1160" height="184" fill="none" stroke="#E4E3DD" stroke-width="1"/>
+        <rect x="72" y="362" width="90" height="6" fill="#E0402A"/>
+        <rect x="72" y="384" width="420" height="24" fill="#C6C9CE"/>
+        <rect x="72" y="418" width="380" height="24" fill="#C6C9CE"/>
+        <rect x="72" y="466" width="240" height="8" fill="#D5D8DD"/>
+
+        <rect x="640" y="362" width="220" height="122" fill="#FBEDE9" stroke="#F0D7D1" stroke-width="1"/>
+        <rect x="884" y="362" width="220" height="122" fill="#EAF5FF" stroke="#D3E9FA" stroke-width="1"/>
+
+        <line x1="40" y1="100" x2="40" y2="514" stroke="#0D99FF" stroke-width="1" stroke-dasharray="6 8" opacity="0.5"/>
+        <line x1="1200" y1="100" x2="1200" y2="514" stroke="#0D99FF" stroke-width="1" stroke-dasharray="6 8" opacity="0.5"/>
+        <line x1="640" y1="410" x2="662" y2="410" stroke="#E0402A" stroke-width="1.5"/>
+        <line x1="884" y1="410" x2="906" y2="410" stroke="#E0402A" stroke-width="1.5"/>
+
+        <rect x="36" y="508" width="1168" height="1" fill="#E4E3DD"/>
+
+        <path d="M300 214 l0 18 l5.5 -4.6 l3 6.6 l2.8 -1.3 l-3 -6.6 l7 -0.2 z" fill="#0D99FF"/>
+        <rect x="316" y="222" width="42" height="16" rx="2" fill="#0D99FF"/>
+        <text x="337" y="234" font-family="monospace" font-size="9" fill="#FFFFFF" text-anchor="middle">Ava</text>
+
+        <path d="M760 400 l0 18 l5.5 -4.6 l3 6.6 l2.8 -1.3 l-3 -6.6 l7 -0.2 z" fill="#E0402A"/>
+        <rect x="776" y="408" width="42" height="16" rx="2" fill="#E0402A"/>
+        <text x="797" y="420" font-family="monospace" font-size="9" fill="#FFFFFF" text-anchor="middle">Ben</text>
+
+        <path d="M1052 250 l0 18 l5.5 -4.6 l3 6.6 l2.8 -1.3 l-3 -6.6 l7 -0.2 z" fill="#1C9A55"/>
+        <rect x="1068" y="258" width="42" height="16" rx="2" fill="#1C9A55"/>
+        <text x="1089" y="270" font-family="monospace" font-size="9" fill="#FFFFFF" text-anchor="middle">Cora</text>
+
+        <rect x="70" y="92" width="284" height="12" fill="none" stroke="#0D99FF" stroke-width="1" stroke-dasharray="4 4" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="stage-caption">蓝图把页面拆成五类任务：盒子、文字、线条、媒体、重复项。每个任务都带自己的边长与坐标。</div>
+  </section>
+
+  <section id="principle">
+    <div class="section-head">
+      <div class="section-num">02 / 三步</div>
+      <div>
+        <h2 class="section-title">快照、重建、归位</h2>
+        <p class="section-sub">页面先进冰箱，再被一群协作者一件件搬回来。中间没有任何一段是录像回放。</p>
+      </div>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <div class="card-strip" style="background:#E0402A"></div>
+        <div class="card-tag" style="color:#E0402A">SNAPSHOT</div>
+        <h3>把页面拆成任务</h3>
+        <p>遍历 DOM 与计算样式：有底色、描边、圆角、阴影的成为盒子；有文字的成为文本层，连同字族、字重、行高、颜色一起取走；单边描线与水平线变成钢笔线；图片、图形、画布变成媒体。</p>
+      </article>
+      <article class="card">
+        <div class="card-strip" style="background:#0D99FF"></div>
+        <div class="card-tag" style="color:#0D99FF">REBUILD</div>
+        <h3>按行解锁，逐个交付</h3>
+        <p>任务按纵向分行，一行建完才放下一行。光标领到任务先飞过去，按下、拖出 W × H 的框、再填色或揭图，文字逐字敲出来，复制项等母版先落位。</p>
+      </article>
+      <article class="card">
+        <div class="card-strip" style="background:#1C9A55"></div>
+        <div class="card-tag" style="color:#1C9A55">FLOCK</div>
+        <h3>让它们像一群人</h3>
+        <p>分离、趋近、避让鼠标三股力叠加，靠得太近会互相让位；空闲时光标在待建区上方游走，交付完成后一起从画面上沿飞走，像一场收工。</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="usage">
+    <div class="section-head">
+      <div class="section-num">03 / 用法</div>
+      <div>
+        <h2 class="section-title">三个 API 就够</h2>
+        <p class="section-sub">库只有一份文件，没有依赖，也不改动你的源页面结构：内容靠 visibility 隐藏，还原时逐项恢复。</p>
+      </div>
+    </div>
+    <div class="usage">
+      <ul class="used">
+        <li><span>target</span><span>要快照的元素，字符串选择器或节点</span></li>
+        <li><span>cursors</span><span>并发光标数，默认 8</span></li>
+        <li><span>speed</span><span>重建倍速，1 / 2 / 3</span></li>
+        <li><span>sound</span><span>Web Audio 合成的点击与打字声</span></li>
+        <li><span>startOnLoad</span><span>true 时建好就自动开演</span></li>
+        <li><span>showControlPanel</span><span>true 时显示右下角控制面板</span></li>
+        <li><span>restoreDelay</span><span>还原延迟，单位毫秒</span></li>
+        <li><span>restoreOnFinish</span><span>true 时建完自动还原真实页面</span></li>
+        <li><span>restoreDelay</span><span>还原延迟，单位毫秒</span></li>
+      </ul>
+      <div class="code">
+<pre><span style="color:#8A8F97">// 零依赖，直接 import</span>
+<span style="color:#E0402A">import</span> { SwarmCursors } <span style="color:#E0402A">from</span> <span style="color:#1C9A55">'./swarm-cursors.js'</span>
+
+<span style="color:#E0402A">const</span> swarm = <span style="color:#E0402A">new</span> SwarmCursors({
+  target: <span style="color:#1C9A55">'#site'</span>,
+  cursors: <span style="color:#0D99FF">8</span>,
+  restoreOnFinish: <span style="color:#0D99FF">true</span>,
+})
+
+<span style="color:#E0402A">await</span> swarm.play()    <span style="color:#8A8F97">// 快照 → 擦空 → 重建 → 自动还原</span>
+swarm.replay()       <span style="color:#8A8F97">// 再来一遍</span>
+swarm.stop()         <span style="color:#8A8F97">// 手动还原</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <footer class="credit" id="credit">
+    <div>SWARM CURSORS<br>v0.1 · MIT</div>
+    <div>灵感与动效语言致意 Joel Califa 的 Swarm，<br>以及 DhvanilPatel 的 swarm-cursors 扩展。</div>
+    <div class="right">本页即样本：<br>它刚刚被自己的光标重建过一次。</div>
+  </footer>
+</div>
+
+<div id="boot-hint" hidden>
+  直接双击打开（file://）时，浏览器会拦截 ES 模块导入。请在项目根目录跑
+  <code>python3 -m http.server 8080</code>，再访问
+  <code>http://localhost:8080/demo/index.html</code>。
+</div>
+
+<script type="module">
+  // 直接引用库源码，不做任何合并打包
+  let SwarmCursors;
+  try {
+    ({ SwarmCursors } = await import('../src/swarm-cursors.js'));
+  } catch (err) {
+    document.getElementById('boot-hint').hidden = false;
+    throw err;
+  }
+
+  const params = new URLSearchParams(location.search);
+  const autoStart = params.has('auto');              // ?auto
+  const showPanel = params.get('panel') !== '0';     // ?panel=0
+  const autoRestore = !params.has('norestore');      // ?norestore
+  const speed = Number(params.get('speed')) || 1;    // ?speed=2
+  const advance = Number(params.get('advance')) || 0;// ?advance=8000
+
+  const site = document.getElementById('site');
+
+  const swarm = new SwarmCursors({
+    target: site,
+    cursors: 8,
+    speed,
+    background: '#FBF7F0',
+    startOnLoad: autoStart,          // 建好就自动开演
+    showControlPanel: showPanel,     // 右下角控制面板
+    restoreOnFinish: autoRestore,    // 建完自动还原真实页面
+    restoreDelay: 1100,
+  });
+
+  // 页面里的「重建这一页」按钮在快照范围内，建完会自己变回可点
+  document.querySelectorAll('[data-build]').forEach((el) => {
+    el.addEventListener('click', () => {
+      if (swarm.state === 'playing' || swarm.state === 'done') swarm.stop();
+      swarm.play();
+    });
+  });
+
+  // 截图 / 录屏辅助：?auto&advance=8000 直接快进，?restore 立即还原
+  swarm.on('start', () => {
+    if (advance) swarm.advance(advance);
+    if (params.has('restore')) swarm.stop();
+  });
+</script>
+</body>
+</html>
